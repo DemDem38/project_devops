@@ -1,0 +1,4 @@
+*.class
+*.lst
+fr.uga.gap.AppTest.txt
+TEST-fr.uga.gap.AppTest.xml
