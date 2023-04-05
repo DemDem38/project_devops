@@ -5,7 +5,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: build with maven
       - uses: actions/checkout@v3
       - run: echo "mvn --batch-mode --update-snapshots build"
   
@@ -13,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - name: test
       - uses: actions/checkout@v3
       - run: echo "mvn --batch-mode --update-snapshots test"
   
@@ -21,6 +19,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - name: build with maven
       - uses: actions/checkout@v3
       - run: echo "Deploy"
