@@ -2,12 +2,12 @@ package fr.uga.gap;
 
 import java.util.ArrayList;
 
-public class ColumFrame {
+public class ColumnFrame {
 
     ArrayList<Integer> list;
     String name;
     
-    public ColumFrame(int[] l, String n) {
+    public ColumnFrame(int[] l, String n) {
         name = n;
         list = new ArrayList<Integer>();
 

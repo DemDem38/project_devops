@@ -5,18 +5,18 @@ import java.util.ArrayList;
 public class Dataframe {
     
     ArrayList<String> nameLines;
-    ArrayList<ColumFrame> colums;
+    ArrayList<ColumnFrame> columns;
 
     public Dataframe(String[] nl, String[] nc, int[][] t) {
         nameLines = new ArrayList<String>();
-        colums = new ArrayList<ColumFrame>();
+        columns = new ArrayList<ColumnFrame>();
 
         for (String elem : nl) {
             nameLines.add((elem));
         }
 
         for (int i = 0; i < nc.length; i++) {
-            colums.add(new ColumFrame(t[i], nc[i]));
+            columns.add(new ColumnFrame(t[i], nc[i]));
         }
     }
 }
