@@ -23,4 +23,9 @@ public class Series<T> {
         this.list = list;
     }
 
+    // Affichage
+    @Override
+    public String toString() {
+        return list.toString();
+    }
 }

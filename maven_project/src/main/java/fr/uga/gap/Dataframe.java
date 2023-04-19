@@ -36,4 +36,53 @@ public class Dataframe<L> {
     public void setIndex(ArrayList<Integer> index) {
         this.index = index;
     }
+
+    // Affichages
+    // All DataFrame
+    @Override
+    public String toString() {
+        String s = "";
+        for (L name: mapSeries.keySet()) {
+            s += name.toString() + "|";
+        }
+        for (int i = 0; i < index.size(); i++) {
+            s += "\n" + index.get(i) + "|";
+            for (L name: mapSeries.keySet()) {
+                s += mapSeries.get(name).getList().get(i) + "|";
+            }
+        }
+        return s +"\n";
+    }
+
+    // Only First n lines
+    public String printFirstLines(int n) {
+        String s = "";
+        for (L name: mapSeries.keySet()) {
+            s += name.toString() + "|";
+        }
+        for (int i = 0; i < n; i++) {
+            s += "\n" + index.get(i) + "|";
+            for (L name: mapSeries.keySet()) {
+                s += mapSeries.get(name).getList().get(i) + "|";
+            }
+        }
+        return s +"\n";
+    }
+
+    // Only Last n lines
+    public String printLastLines(int n) {
+        String s = "";
+        for (L name: mapSeries.keySet()) {
+            s += name.toString() + "|";
+        }
+        for (int i = n-1; i < index.size(); i++) {
+            s += "\n" + index.get(i) + "|";
+            for (L name: mapSeries.keySet()) {
+                s += mapSeries.get(name).getList().get(i) + "|";
+            }
+        }
+        return s +"\n";
+    }
+
+    
 }
