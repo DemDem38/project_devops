@@ -7,22 +7,20 @@ import junit.framework.TestSuite;
 import static junit.framework.Assert.*;
 
 
-public class ColumnFrameTest extends TestCase {
+public class SeriesTest extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    int[] integerArray;
-    String integerName;
-    ColumnFrame integerColumn;
+    Integer[] integerArray;
+    Series<Integer> integerColumn;
 
-    public ColumnFrameTest( String testName )
+    public SeriesTest( String testName )
     {   
         super( testName );
-        integerArray = new int[]{1, 2, 3 ,4 ,5 ,6 ,7 ,8 ,9 ,10};
-        integerName = new String("Colonne d'entiers");
-        integerColumn = new ColumnFrame(integerArray, integerName);
+        integerArray = new Integer[]{1, 2, 3 ,4 ,5 ,6 ,7 ,8 ,9 ,10};
+        integerColumn = new Series<>(integerArray);
     }
 
     /**
@@ -30,7 +28,7 @@ public class ColumnFrameTest extends TestCase {
      */
     public static Test suite()
     {
-        return new TestSuite( ColumnFrameTest.class );
+        return new TestSuite( SeriesTest.class );
     }
 
     /**
@@ -38,9 +36,8 @@ public class ColumnFrameTest extends TestCase {
      */
     public void testColumnFrameCreation()
     {
-        assertEquals(integerColumn.name, integerName);
         for(int i = 0; i < integerColumn.list.size();i++){
-            assertEquals((int)integerColumn.list.get(i), integerArray[i]);
+            assertEquals((Integer)integerColumn.list.get(i), integerArray[i]);
         }
     }
 }
