@@ -34,18 +34,17 @@ public class DataframeTest extends TestCase{
         return new TestSuite( DataframeTest.class );
     }
 
-    /**
-     * Rigourous Test :-)
-     */
+    // testDataframeCreation() : test initialisation dataframe 
     public void testDataframeCreation()
     {   
         int i = 0;
         int j;
-        for (String n: dataframe.mapSeries.keySet()) {
+        
+        for (String n: dataframe.getMapSeries().keySet()) {
             assertEquals(n, name[i]);
-            Series<Object> series = dataframe.mapSeries.get(n);
+            Series<Object> series = dataframe.getMapSeries().get(n);
             j = 0;
-            for (Object o: series.list) {
+            for (Object o: series.getList()) {
                 assertEquals(o, object[i][j]);
                 j++;
             }

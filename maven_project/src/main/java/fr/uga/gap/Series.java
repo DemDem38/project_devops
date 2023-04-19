@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 public class Series<T> {
 
-    ArrayList<T> list;
+    private ArrayList<T> list;
 
-    
     public Series(T[] l) {
         list = new ArrayList<T>();
 
@@ -14,4 +13,14 @@ public class Series<T> {
             list.add(l[i]);
         }
     }
+
+    // Getter and Setter
+    public ArrayList<T> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<T> list) {
+        this.list = list;
+    }
+
 }

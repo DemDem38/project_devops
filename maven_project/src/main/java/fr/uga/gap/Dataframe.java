@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 public class Dataframe<L> {
     
-    HashMap<L, Series<Object>> mapSeries;
-    ArrayList<Integer> index;
+    private HashMap<L, Series<Object>> mapSeries;
+    private ArrayList<Integer> index;
 
     public Dataframe(L[] ind, Object[][] o) {
         mapSeries = new HashMap<>();
@@ -18,12 +18,22 @@ public class Dataframe<L> {
             index.add(i);
         }
 
-        // for (String elem : nl) {
-        //     nameLines.add((elem));
-        // }
+    }
 
-        // for (int i = 0; i < nc.length; i++) {
-        //     columns.add(new Series(t[i], nc[i]));
-        // }
+    // Getters and Setters
+    public HashMap<L, Series<Object>> getMapSeries() {
+        return mapSeries;
+    }
+
+    public void setMapSeries(HashMap<L, Series<Object>> mapSeries) {
+        this.mapSeries = mapSeries;
+    }
+
+    public ArrayList<Integer> getIndex() {
+        return index;
+    }
+
+    public void setIndex(ArrayList<Integer> index) {
+        this.index = index;
     }
 }

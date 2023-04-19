@@ -55,34 +55,40 @@ public class SeriesTest extends TestCase {
         return new TestSuite( SeriesTest.class );
     }
 
+
     /**
-     * testColumnFrameCreation
+     * Test the initialisation of Series with different types
      */
+
+    // testIntegerSerieCreation() : test with integers
     public void testIntegerSerieCreation()
     {
-        for(int i = 0; i < integerSerie.list.size();i++){
-            assertEquals((Integer)integerSerie.list.get(i), integerArray[i]);
+        for(int i = 0; i < integerSerie.getList().size();i++){
+            assertEquals((Integer)integerSerie.getList().get(i), integerArray[i]);
         }
     }
 
+    // testStringSerieCreation() : test with string
     public void testStringSerieCreation()
     {
-        for(int i = 0; i < stringSerie.list.size();i++){
-            assertEquals((String)stringSerie.list.get(i), stringArray[i]);
+        for(int i = 0; i < stringSerie.getList().size();i++){
+            assertEquals((String)stringSerie.getList().get(i), stringArray[i]);
         }
     }
 
+    // testBooleanSerieCreation() : test with boolean
     public void testBooleanSerieCreation()
     {
-        for(int i = 0; i < boolSerie.list.size();i++){
-            assertEquals((Boolean)boolSerie.list.get(i), boolArray[i]);
+        for(int i = 0; i < boolSerie.getList().size();i++){
+            assertEquals((Boolean)boolSerie.getList().get(i), boolArray[i]);
         }
     }
 
+    // testDoubleSerieCreation() : test with double
     public void testDoubleSerieCreation()
     {
-        for(int i = 0; i < doubleSerie.list.size();i++){
-            assertEquals((Double)doubleSerie.list.get(i), doubleArray[i]);
+        for(int i = 0; i < doubleSerie.getList().size();i++){
+            assertEquals((Double)doubleSerie.getList().get(i), doubleArray[i]);
         }
     }
 }
