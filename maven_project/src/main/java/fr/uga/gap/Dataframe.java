@@ -2,6 +2,7 @@ package fr.uga.gap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Dataframe<L> {
     
@@ -9,33 +10,68 @@ public class Dataframe<L> {
     private ArrayList<Integer> index;
 
     public Dataframe(L[] ind, Object[][] o) throws IllegalArgumentException {
+        // Initialize data structures
         mapSeries = new HashMap<>();
         index = new ArrayList<>();
 
-        // Verify if the number of labels and colums is equal
-        if (ind.length != o.length) {
-            throw new IllegalArgumentException("Number f labels and columns are different");
-        }
+        initializeDataframe(ind, o);
+    }
 
-        int numIndex=0;
+    public void initializeDataframe(L[] ind, Object[][] o) {
+        // Test if the array have the correct size
+        sizeLabelColumsEqual(ind, o);
+        numberElementColumn(o);
 
-        for (int i = 0; i < o.length; i++) {
-            /**
-             * Get the number of element for the first series and
-             * verify if this number is the same for the other series
-             */
-            if (i == 0) {
-                numIndex = o[i].length;
-            } else {
-                if (numIndex != o[i].length) {
-                    throw new IllegalArgumentException("Different number of element in between colums");
-                }
-            }
-            Series<Object> s = new Series<>(o[i]);
-            mapSeries.put(ind[i], s);
+        // Construct the dataframe
+        for (int i = 0; i < ind.length; i++) {
+            constructSeries(ind[i], o[i], i);
             index.add(i);
         }
+    }
 
+    // Verify if the number of labels and columns is equal
+    private void sizeLabelColumsEqual(L[] i, Object[][] o) {
+        if (i.length != o.length) {
+            throw new IllegalArgumentException("Number of columns is " + o.length + " but number of labels is " + i.length);
+        }
+    }
+
+    // Verify if the number of elements in each column is the same
+    private void numberElementColumn(Object[][] o) {
+        int size = o.length;
+        int sizeColumns;
+        if (size > 0) {
+            sizeColumns = o[0].length;
+            for (int i = 1; i < size; i++) {
+                if (sizeColumns != o[i].length) {
+                    throw new IllegalArgumentException("Size of column " + i + " is " + o[i].length +
+                            " instead of size " + sizeColumns);
+                }
+            }
+        }
+    }
+
+    private void constructSeries(L label, Object[] elems, int index) {
+        // Get the number of element
+        int sizeColumn = elems.length;
+        if (sizeColumn > 0) {
+            // Get the type of the first element to compare with the rest
+            String typeElem = elems[0].getClass().getSimpleName();
+
+            // Verify the type of the rest of elements
+            String typeRest;
+            for (int i = 1; i < sizeColumn; i++) {
+                typeRest = elems[i].getClass().getSimpleName();
+                if (!Objects.equals(typeElem, typeRest)) {
+                    throw new IllegalArgumentException("Index " + i + " of column " + index + " has type " + typeRest +
+                            " instead of type " + typeElem);
+                }
+            }
+
+            // Construct the Series and add to hashmap
+            Series<Object> s = new Series<>(elems, typeElem);
+            mapSeries.put(label, s);
+        }
     }
 
     // Getters and Setters

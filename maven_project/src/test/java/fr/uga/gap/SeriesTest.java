@@ -29,7 +29,7 @@ public class SeriesTest extends TestCase {
     Series<Double> doubleSerie;
 
     public SeriesTest( String testName )
-    {   
+    {
         super( testName );
         integerArray = new Integer[]{1, 2, 3 ,4 ,5 ,6 ,7 ,8 ,9 ,10};
         integerSerie = new Series<>(integerArray);
@@ -41,7 +41,7 @@ public class SeriesTest extends TestCase {
         boolSerie = new Series<>(boolArray);
 
         charArray = new Character[]{'a', 'b', 'c', 'd', 'e'};
-        charSerie = new Series<>(charArray);
+        charSerie = new Series<>(charArray, "Character");
 
         doubleArray = new Double[]{2.5, 3.9, 15.2, 15.6};
         doubleSerie = new Series<>(doubleArray);
@@ -90,5 +90,14 @@ public class SeriesTest extends TestCase {
         for(int i = 0; i < doubleSerie.getList().size();i++){
             assertEquals((Double)doubleSerie.getList().get(i), doubleArray[i]);
         }
+    }
+
+    // testDoubleSerieCreation() : test with double
+    public void testCharSerieCreation()
+    {
+        for(int i = 0; i < charSerie.getList().size();i++){
+            assertEquals((Character) charSerie.getList().get(i), charArray[i]);
+        }
+        assertEquals(charSerie.getTypeArray(), "Character");
     }
 }
