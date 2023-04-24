@@ -1,36 +1,58 @@
 package fr.uga.gap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
-public class Dataframe<L> {
-    
-    private HashMap<L, Series<Object>> mapSeries;
-    private ArrayList<Integer> index;
+public class Dataframe {
 
-    public Dataframe(L[] ind, Object[][] o) throws IllegalArgumentException {
+    /* Attributs */
+    private HashMap<Object, Series<Object>> mapSeries;
+    private ArrayList<Object> labelLines;
+
+    /*  ================= Constructor ================= */
+    public Dataframe(Object[] indColumns, Object[][] o) throws IllegalArgumentException {
         // Initialize data structures
         mapSeries = new HashMap<>();
-        index = new ArrayList<>();
+        labelLines = new ArrayList<>();
 
-        initializeDataframe(ind, o);
+        initializeDataframe(indColumns, o);
     }
 
-    public void initializeDataframe(L[] ind, Object[][] o) {
+    public Dataframe(Object[] indColumns, Object[][] o, Object[] indLines) throws IllegalArgumentException {
+        // Initialize data structures
+        mapSeries = new HashMap<>();
+        labelLines = new ArrayList<>();
+
+        initializeDataframe(indColumns, o, indLines);
+    }
+
+    /* ================= Initialize Dataframe ================= */
+    private void initializeDataframe(Object[] indColumns, Object[][] o) {
         // Test if the array have the correct size
-        sizeLabelColumsEqual(ind, o);
+        sizeLabelColumsEqual(indColumns, o);
         numberElementColumn(o);
 
         // Construct the dataframe
-        for (int i = 0; i < ind.length; i++) {
-            constructSeries(ind[i], o[i], i);
-            index.add(i);
+        for (int i = 0; i < indColumns.length; i++) {
+            constructSeries(indColumns[i], o[i], i);
+            labelLines.add(i);
         }
     }
 
-    // Verify if the number of labels and columns is equal
-    private void sizeLabelColumsEqual(L[] i, Object[][] o) {
+    private void initializeDataframe(Object[] indColumn, Object[][] o, Object[] indLines) {
+        // Test if the array have the correct size
+        sizeLabelColumsEqual(indColumn, o);
+        numberElementColumn(o);
+        numberIndexLines(indLines, o[0].length);
+
+        // Construct the dataframe
+        for (int i = 0; i < indColumn.length; i++) {
+            constructSeries(indColumn[i], o[i], i);
+            labelLines.add(indLines[i]);
+        }
+    }
+
+    // Verify if the number of labels and colums is equal
+    private void sizeLabelColumsEqual(Object[] i, Object[][] o) {
         if (i.length != o.length) {
             throw new IllegalArgumentException("Number of columns is " + o.length + " but number of labels is " + i.length);
         }
@@ -39,19 +61,26 @@ public class Dataframe<L> {
     // Verify if the number of elements in each column is the same
     private void numberElementColumn(Object[][] o) {
         int size = o.length;
-        int sizeColumns;
+        int sizeColums;
         if (size > 0) {
-            sizeColumns = o[0].length;
+            sizeColums = o[0].length;
             for (int i = 1; i < size; i++) {
-                if (sizeColumns != o[i].length) {
+                if (sizeColums != o[i].length) {
                     throw new IllegalArgumentException("Size of column " + i + " is " + o[i].length +
-                            " instead of size " + sizeColumns);
+                            " instead of size " + sizeColums);
                 }
             }
         }
     }
 
-    private void constructSeries(L label, Object[] elems, int index) {
+    // Verify if the number of lines is correct between dataframe and labels for lines
+    private void numberIndexLines(Object[] indLines, int nb) {
+        if (indLines.length != nb) {
+            throw new IllegalArgumentException("Number of lines is " + indLines.length + " but number of lines in dataframe is " + nb);
+        }
+    }
+
+    private void constructSeries(Object label, Object[] elems, int index) {
         // Get the number of element
         int sizeColumn = elems.length;
         if (sizeColumn > 0) {
@@ -74,20 +103,12 @@ public class Dataframe<L> {
         }
     }
 
-    // Getters and Setters
-    public HashMap<L, Series<Object>> getMapSeries() {
+    // Getters
+    public HashMap<Object, Series<Object>> getMapSeries() {
         return mapSeries;
     }
 
-    public void setMapSeries(HashMap<L, Series<Object>> mapSeries) {
-        this.mapSeries = mapSeries;
-    }
-
-    public ArrayList<Integer> getIndex() {
-        return index;
-    }
-
-    public void setIndex(ArrayList<Integer> index) {
-        this.index = index;
+    public ArrayList<Object> getLabelLines() {
+        return labelLines;
     }
 }
