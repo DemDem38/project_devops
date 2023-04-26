@@ -11,18 +11,26 @@ public class DataframeTest extends TestCase {
      * @param testName name of the test case
      */
     Dataframe dataframeStatistics;
-    String[] lines;
-    Object[][] object;
-    String[] name;
+    String[] nameStatistics;  
+    String[] linesStatistics;
+    Object[][] objectStatistics;
+  
+    Dataframe dataframeReal;
+    String[] nameReal;
+    Object[][] objectReal;
+
     public DataframeTest( String testName )
     {
         super( testName );
-        name = new String[]{"A", "B", "C"};
-        object = new Object[][]{{0, 1, 5},
+        nameStatistics = new String[]{"A", "B", "C"};
+        objectStatistics = new Object[][]{{0, 1, 5},
                 {"a", "b", "c"},
                 {0.0f, 1.0f, 2.0f}};
-        lines = new String[]{"a", "b", "c"};
-        dataframeStatistics = new Dataframe(name, object, lines);
+        linesStatistics = new String[]{"a", "b", "c"};
+        dataframeStatistics = new Dataframe(nameStatistics, objectStatistics, linesStatistics);        
+        nameReal = new String[]{"Age", "Nationalité", "Sexe"};
+        objectReal = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframeReal = new Dataframe(nameReal, objectReal);
     }
 
     /**
@@ -523,5 +531,29 @@ public class DataframeTest extends TestCase {
 
         float mean = dataframeStatistics.findFloatMeanOfColumn("B");
         assertEquals(0f, mean);
+    }
+
+    // testAffichageComplet() : vérifie l'affichage complet d'un dataframe
+    public void testAffichageComplet() {
+        String s = dataframeReal.toString();
+        String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n2 | 39 | Suisse | H | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
+    }
+
+    // testAffichagePremieresLignes() : vérifie l'affichage des premières lignes d'un dataframe
+    public void testAffichagePremieresLignes() {
+        String s = dataframeReal.printFirstLines(2);
+        String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
+    }
+
+    // testAffichageDernieresLignes() : vérifie l'affichage des dernières lignes d'un dataframe
+    public void testAffichageDernieresLignes() {
+        String s = dataframeReal.printLastLines(1);
+        String expected = "    Age | Nationalité | Sexe | \n2 | 39 | Suisse | H | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
     }
 }
