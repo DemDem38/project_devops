@@ -166,3 +166,5 @@ C'est la raison pour laquelle il y a une pull request de dataframe_creation vers
 Les différents outils utilisé durant le projet sont nécessaire au bon fonctionnement et permet le bon déroulement de ce dernier. Pour travailler dans les meilleurs conditions.
 
 Maven permet vraiment de choisir ou crée ça propre architecture et de mettre en place au sein d'une entreprise une méthode de travail qui est adapté a sont besoin. 
+
+GitHub Action permet non seulement d'automatisé les tests, mais aussi de forcé une reflexion importante sur les fonctionalitées pour pouvoir écrire les tests en amont.
