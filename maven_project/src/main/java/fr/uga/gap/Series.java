@@ -1,26 +1,66 @@
 package fr.uga.gap;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Series<T> {
+public class Series {
 
-    private ArrayList<T> list;
+    private HashMap<Object, Object> mapData;
+    private String typeArray;
 
-    public Series(T[] l) {
-        list = new ArrayList<T>();
+    public Series(Object[] l) {
+        // Initialize array list
+        mapData = new HashMap<>();
+        typeArray = null;
 
+        initializeSeries(l);
+    }
+
+    public Series(Object[] l, Object[] ind) {
+        // Initialize array list
+        mapData = new HashMap<>();
+        typeArray = null;
+
+        initializeSeries(l, ind);
+    }
+
+    public Series(Object[] l, String type) {
+        // Initialize array list
+        mapData = new HashMap<>();
+        typeArray = type;
+
+        initializeSeries(l);
+    }
+
+    public Series(Object[] l, Object[] ind, String type) {
+        // Initialize array list
+        mapData = new HashMap<>();
+        typeArray = type;
+        initializeSeries(l, ind);
+    }
+
+    private void initializeSeries(Object[] l) {
+        // If the user don't give an array of index.
+        // The index are 0, 1, 2, etc...
         for (int i = 0; i < l.length; i++) {
-            list.add(l[i]);
+            mapData.put(i, l[i]);
         }
     }
 
-    // Getter and Setter
-    public ArrayList<T> getList() {
-        return list;
+    private void initializeSeries(Object[] l, Object[] ind) {
+        for (int i = 0; i < l.length; i++) {
+            mapData.put(ind[i], l[i]);
+        }
     }
 
-    public void setList(ArrayList<T> list) {
-        this.list = list;
+    public Object getData(Object label) {
+        return mapData.get(label);
     }
 
+
+    // Getters
+    public HashMap<Object, Object> getMapData() {
+        return mapData;
+    }
+
+    public String getTypeArray() { return typeArray; }
 }

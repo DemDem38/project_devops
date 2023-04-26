@@ -107,7 +107,7 @@ Dataframe dfl = dataframe.loc([], ["Personne 3"]);
 Pour sélectionner un sous-ensemble de colonnes, faire l'opération inverse
 ```java
 // Sélectionne les colonnes d'indices 0 et 1
-Dataframe dfi = dataframe.iloc([0, 1], []);
+Dataframe dfi = dataframe.iloc([0, 1], []);>>>>>>> main
 // Sélectionne les colonnes de labels "Age" et "Nationalité"
 Dataframe dfl = dataframe.loc(["Age", "Nationalité"], []);
 ```
