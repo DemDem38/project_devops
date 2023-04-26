@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Dataframe {
@@ -35,12 +36,18 @@ public class Dataframe {
         // Test if the array have the correct size
         sizeLabelColumsEqual(indColumns, o);
         numberElementColumn(o);
+        if (o.length > 0) {
+            labelLines = new Object[o[0].length];
+            for (int i = 0; i < o[0].length; i++) {
+                labelLines[i] = i;
+            }
+        } else {
+            labelLines = new Object[0];
+        }
 
-        labelLines = new Object[o[0].length];
         // Construct the dataframe
         for (int i = 0; i < indColumns.length; i++) {
             constructSeries(indColumns[i], o[i], i);
-            labelLines[i] = i;
         }
 
     }
@@ -92,12 +99,7 @@ public class Dataframe {
     }
 
     private void constructSeries(Object label, Object[] elems, int index) {
-        Object[] indexElems = new Object[elems.length];
-        for (int i = 0; i < elems.length; i++) {
-            indexElems[i] = i;
-        }
-
-        constructSeries(label, elems, indexElems, index);
+        constructSeries(label, elems, labelLines, index);
     }
 
     private void constructSeries(Object label, Object[] elems, Object[] labelLines, int index) {
@@ -146,6 +148,8 @@ public class Dataframe {
                 splitLine = line.split(sep);
                 value.add(splitLine);
             }
+            
+            br.close();
         } catch (FileNotFoundException f) {
             throw new RuntimeException("File " + filename + " not found");
         } catch (IOException i) {
@@ -156,6 +160,7 @@ public class Dataframe {
         ArrayList<ArrayList<Object>> data = new ArrayList<>();
         ArrayList<Object> obj;
         int i;
+        double d;
         float f;
         char c;
         for (String[] str : value) {
@@ -168,6 +173,17 @@ public class Dataframe {
                     continue;
                 } catch (NumberFormatException e) {
                     // Nothing because not the good type
+                }
+
+                // Same for double
+                try {
+                    d = Double.parseDouble(s);
+                    if (!s.contains("f")) {
+                        obj.add(d);
+                        continue;
+                    }
+                } catch (NumberFormatException e) {
+                    // Nothing
                 }
 
                 // Same for float
@@ -264,11 +280,9 @@ public class Dataframe {
         Object[] newLabLin = labLin;
         if (newLabCol.length == 0 && newLabLin.length > 0) {
             newLabCol = labelColumns;
-            System.out.println("OK BIS");
         }
         if (newLabLin.length == 0 && newLabCol.length > 0) {
             newLabLin = labelLines;
-            System.out.println("OK");
         }
 
         // Now, we create the array for the new dataframe
@@ -327,13 +341,35 @@ public class Dataframe {
         }
     }
 
-    // Add a complex selection : from a specific value
+    // Add a complex selection : Filtering data to get lines where the comparaison between 
     public Dataframe filterData(Object labCol, String comparator, Object value) {
         if (!checkComparator(comparator)) {
             throw new IllegalArgumentException("Comparator " + comparator + " is not a comparator");
         }
 
-        return null;
+        // Check if labCol is a label for columns
+        if (mapSeries.get(labCol) == null) {
+            throw new IllegalArgumentException("Label " + labCol + " is not a label fo columns");
+        }
+
+        // Check if the value of the Series and value are the same
+        Series colSeries = mapSeries.get(labCol);
+        if (!checkType(colSeries, value)) {
+            throw new IllegalArgumentException("Value " + value + " has type " + value.getClass().getSimpleName() + " instead of " + colSeries.getTypeArray());
+        }
+
+        // Now, we compare the values of the column "labCol" with value
+        /* Principe : For all labels in labelLines, we compare the value of dataframe[col, lab] with value
+         * If it's true, we add the label in lablines, else not.
+         * We returned a new Dataframe of all columns with labels labelColumns and lines from labLines
+         */
+        ArrayList<Object> labLines = new ArrayList<>();
+        for (Object ll : labelLines) {
+            if (compareValues(colSeries.getData(ll), value, comparator, colSeries.getTypeArray())) {
+                labLines.add(ll);
+            }
+        }
+        return this.loc(new Object[]{}, labLines.toArray());
     }
 
     private boolean checkComparator(String comparator) {
@@ -349,6 +385,102 @@ public class Dataframe {
                 return false;
         }
     }
+
+    private boolean checkType(Series s, Object val) {
+        String typeS = s.getTypeArray();
+        String typeVal = val.getClass().getSimpleName();
+        if (typeS.compareTo("Float") == 0 && typeVal.compareTo("Double")==0) {
+            return true;
+        } else if (typeS.compareTo("Double") == 0 && typeVal.compareTo("Float")==0) {
+            return true;
+        }
+        return typeS.equals(typeVal);
+    }
+
+    private boolean compareValues(Object val1, Object val2, String comparator, String type) {
+        switch (type) {
+            case "Integer":
+                int i1 = (int)val1;
+                int i2 = (int)val2;
+                switch (comparator) {
+                    case "==":
+                        return i1 == i2;
+                    case "!=":
+                        return i1 != i2;
+                    case "<":
+                        return i1 < i2;
+                    case ">":
+                        return i1 > i2;
+                    case ">=":
+                        return i1 >= i2;
+                    case "<=":
+                        return i1 <= i2;
+                    default:
+                        return false;
+                }
+            case "Float":
+            case "Double":
+                BigDecimal d1 = new BigDecimal(""+val1.toString());
+                BigDecimal d2 = new BigDecimal(""+val2.toString());
+                switch (comparator) {
+                    case "==":
+                        return d1.compareTo(d2) == 0;
+                    case "!=":
+                        return d1.compareTo(d2) != 0;
+                    case "<":
+                        return d1.compareTo(d2) < 0;
+                    case ">":
+                        return d1.compareTo(d2) > 0;
+                    case ">=":
+                        return d1.compareTo(d2) >= 0;
+                    case "<=":
+                        return d1.compareTo(d2) <= 0;
+                    default:
+                        return false;
+                }
+            case "Character":
+                char c1 = (char)val1;
+                char c2 = (char)val2;
+                switch (comparator) {
+                    case "==":
+                        return c1 == c2;
+                    case "!=":
+                        return c1 != c2;
+                    case "<":
+                        return c1 < c2;
+                    case ">":
+                        return c1 > c2;
+                    case ">=":
+                        return c1 >= c2;
+                    case "<=":
+                        return c1 <= c2;
+                    default:
+                        return false;
+                }
+            case "String":
+                String s1 = (String)val1;
+                String s2 = (String)val2;
+                switch (comparator) {
+                    case "==":
+                        return s1.compareTo(s2) == 0;
+                    case "!=":
+                        return s1.compareTo(s2) != 0;
+                    case "<":
+                        return s1.compareTo(s2) < 0;
+                    case ">":
+                        return s1.compareTo(s2) > 0;
+                    case ">=":
+                        return s1.compareTo(s2) >= 0;
+                    case "<=":
+                        return s1.compareTo(s2) <= 0;
+                    default:
+                        return false;
+                }
+            default:
+                throw new IllegalArgumentException("The comparison between " + type + " values are not implemented");
+        }
+    }
+
 
     // Getters
     public HashMap<Object, Series> getMapSeries() {
@@ -376,7 +508,7 @@ public class Dataframe {
         for (int i = 0; i < this.labelColumns.length; i++) {
             isInCol = false;
             for (int j = 0; j < d.labelColumns.length; j++) {
-                if (this.labelColumns[i] == d.getLabelColumns()[i]) {
+                if (this.labelColumns[i].toString().equals(d.getLabelColumns()[i].toString())) {
                     isInCol = true;
                 }
             }
@@ -395,7 +527,7 @@ public class Dataframe {
         for (Object labelLine : this.labelLines) {
             isInCol = false;
             for (int j = 0; j < d.labelLines.length; j++) {
-                if (labelLine == d.getLabelLines()[j]) {
+                if (labelLine.toString().equals(d.getLabelLines()[j].toString())) {
                     isInCol = true;
                 }
             }
@@ -416,7 +548,7 @@ public class Dataframe {
                 if (hisData == null) {
                     return false;
                 }
-                if (ourData != hisData) {
+                if (!ourData.toString().equals(hisData.toString())) {
                     return false;
                 }
             }
@@ -591,5 +723,4 @@ public class Dataframe {
         Dataframe newDataframe = this.iloc(columns, lines);
         return newDataframe.toString();
     }
-    
 }
