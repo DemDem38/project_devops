@@ -10,16 +10,27 @@ public class DataframeTest extends TestCase {
      *
      * @param testName name of the test case
      */
+    Dataframe dataframeStatistics;
+    String[] nameStatistics;  
+    String[] linesStatistics;
+    Object[][] objectStatistics;
+  
     Dataframe dataframeReal;
-    String[] name;
-    Object[][] object;
+    String[] nameReal;
+    Object[][] objectReal;
 
     public DataframeTest( String testName )
     {
         super( testName );
-        name = new String[]{"Age", "Nationalité", "Sexe"};
-        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
-        dataframeReal = new Dataframe(name, object);
+        nameStatistics = new String[]{"A", "B", "C"};
+        objectStatistics = new Object[][]{{0, 1, 5},
+                {"a", "b", "c"},
+                {0.0f, 1.0f, 2.0f}};
+        linesStatistics = new String[]{"a", "b", "c"};
+        dataframeStatistics = new Dataframe(nameStatistics, objectStatistics, linesStatistics);        
+        nameReal = new String[]{"Age", "Nationalité", "Sexe"};
+        objectReal = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframeReal = new Dataframe(nameReal, objectReal);
     }
 
     /**
@@ -448,6 +459,78 @@ public class DataframeTest extends TestCase {
         } catch (Exception e) {
             fail("Selection with index out of bounds give another exception");
         }
+    }
+
+
+    // testFindMaxIntegerValueOfColumn() : test if max value of column is returned (for a Integer)
+    // when column selected is Integer
+    public void testFindMaxIntegerValueOfColumn() {
+        int maxValue = dataframeStatistics.findMaxIntegerValueOfColumn("A");
+        assertEquals(5, maxValue);
+    }
+
+    // testFindMinIntegerValueOfColumn() : test if min value of column is returned (for a Integer)
+    // when column selected is Integer
+    public void testFindMinIntegerValueOfColumn() {
+        int minValue = dataframeStatistics.findMinIntegerValueOfColumn("A");
+        assertEquals(0, minValue);
+    }
+
+    // testFindMaxMinIntegerValueOfNotIntegerColumn() : test if max or min value of column is -1 when column is not an Integer column
+    public void testFindMaxMinIntegerValueOfNotIntegerColumn() {
+        int maxValue = dataframeStatistics.findMaxIntegerValueOfColumn("B");
+        assertEquals(-1, maxValue);
+        int minValue = dataframeStatistics.findMinIntegerValueOfColumn("B");
+        assertEquals(-1, minValue);
+    }
+
+    // testFindMaxFloatValueOfColumn() : test if max value of column is returned (for a Float) 
+    // when column selected is Float
+    public void testFindMaxFloatValueOfColumn() {
+        float maxValue = dataframeStatistics.findMaxFloatValueOfColumn("C");
+        assertEquals(2.0f, maxValue);
+    }
+
+    // testFindMinIntegerValueOfColumn() : test if min value of column is returned (for a Float)
+    // when column selected is Float
+    public void testFindMinFloatValueOfColumn() {
+        float minValue = dataframeStatistics.findMinFloatValueOfColumn("C");
+        assertEquals(0.0f, minValue);
+    }
+
+    // testFindMaxMinFloatValueOfNotFloatColumn() : test if max or min value of column is -1 when column is not a Float column
+    public void testFindMaxMinFloatValueOfNotFloatColumn() {
+        float maxValue = dataframeStatistics.findMaxFloatValueOfColumn("B");
+        assertEquals(-1.0f, maxValue);
+        float minValue = dataframeStatistics.findMinFloatValueOfColumn("B");
+        assertEquals(-1.0f, minValue);
+    }
+
+    // testIntegerMeanOfColumn() : test if min value of column is returned (for a Integer)
+    // when column selected is integer
+    public void testIntegerMeanOfColumn() {
+        float mean = dataframeStatistics.findIntegerMeanOfColumn("A");
+        assertEquals(2.0f, mean);
+    }
+
+    // testFloatMeanOfColumn() : test if min value of column is returned (for a Float)
+    // when column selected is float
+    public void testFloatMeanOfColumn() {
+        float mean = dataframeStatistics.findFloatMeanOfColumn("C");
+        assertEquals(1.0f, mean);
+    }
+
+    // testFindMeanIntegerValueOfNotFloatColumn() : test if mean value of column is 0.0f when column is not a Integer column
+    public void testFindMeanIntegerValueOfNotIntegerColumn() {
+        float mean = dataframeStatistics.findIntegerMeanOfColumn("B");
+        assertEquals(0f, mean);
+    }
+
+    // testFindMeanFloatValueOfNotFloatColumn() : test if mean value of column is 0.0f when column is not a Float column
+    public void testFindMeanFloatValueOfNotFloatColumn() {
+
+        float mean = dataframeStatistics.findFloatMeanOfColumn("B");
+        assertEquals(0f, mean);
     }
 
     // testAffichageComplet() : vérifie l'affichage complet d'un dataframe

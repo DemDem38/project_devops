@@ -424,6 +424,118 @@ public class Dataframe {
         return true;
     }
 
+    // return -1 if max can't be found because column is not integer or column doesn't exist
+    public int findMaxIntegerValueOfColumn(Object labelColumn) {
+        Integer maxValue = -1;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Integer") == 0) {
+                    for (Object v: labelLines) {
+                        if ((Integer) getMapSeries().get(o).getData(v) > maxValue) {
+                            maxValue = (Integer) getMapSeries().get(o).getData(v);
+                        }
+                    }
+                }
+            }
+        }
+        return maxValue;
+    }
+
+    // return -1 if min can't be found because column is not integer or column doesn't exist
+    public int findMinIntegerValueOfColumn(Object labelColumn) {
+        Integer minValue = -1;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Integer") == 0) {
+                    minValue = (Integer) getMapSeries().get(o).getData(labelLines[0]);
+                    for (Object v: labelLines) {
+                        if ((Integer) getMapSeries().get(o).getData(v) < minValue) {
+                            minValue = (Integer) getMapSeries().get(o).getData(v);
+                        }
+                    }
+                }
+            }
+        }
+        return minValue;
+    }
+
+    // return -1 if max can't be found because column is not float or column doesn't exist
+    public float findMaxFloatValueOfColumn(Object labelColumn) {
+        Float maxValue = -1.0f;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Float") == 0) {
+                    for (Object v: labelLines) {
+                        if ((Float) getMapSeries().get(o).getData(v) > maxValue) {
+                            maxValue = (Float) getMapSeries().get(o).getData(v);
+                        }
+                    }
+                }
+            }
+        }
+        return maxValue;
+    }
+
+    // return -1 if min can't be found because column is not float or column doesn't exist
+    public float findMinFloatValueOfColumn(Object labelColumn) {
+        Float minValue = -1.0f;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Float") == 0) {
+                    minValue = (Float) getMapSeries().get(o).getData(labelLines[0]);
+                    for (Object v: labelLines) {
+                        if ((Float) getMapSeries().get(o).getData(v) < minValue) {
+                            minValue = (Float) getMapSeries().get(o).getData(v);
+                        }
+                    }
+                }
+            }
+        }
+        return minValue;
+    }
+
+    // return -1 if mean can't be found because column is not integer or column doesn't exist
+    public float findIntegerMeanOfColumn(Object labelColumn) {
+        float moyenne = 0.0f;
+        float n = 0.0f;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Integer") == 0) {
+                    for (Object v: labelLines) {
+                        moyenne += (Integer) getMapSeries().get(o).getData(v);
+                        n++;
+                    }
+                }
+            }
+        }
+        if (n != 0.0f) {
+            return moyenne/n;
+        } else {
+            return moyenne;
+        }
+    }
+
+    // return -1 if mean can't be found because column is not Float or column doesn't exist
+    public float findFloatMeanOfColumn(Object labelColumn) {
+        float moyenne = 0.0f;
+        float n = 0.0f;
+        for (Object o: labelColumns) {
+            if (o.toString().equals(labelColumn.toString())) {
+                if (getMapSeries().get(o).getTypeArray().compareTo("Float") == 0) {
+                    for (Object v: labelLines) {
+                        moyenne += (Float) getMapSeries().get(o).getData(v);
+                        n++;
+                    }
+                }
+            }
+        }
+        if (n != 0.0f) {
+            return moyenne/n;
+        } else {
+            return moyenne;
+        }
+    }
+
     @Override
     public String toString() {
         String s = "   ";
