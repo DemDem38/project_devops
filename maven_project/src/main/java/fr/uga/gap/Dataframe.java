@@ -423,4 +423,61 @@ public class Dataframe {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        String s = "   ";
+        int maxSpace = 0;
+        String space = "";
+        for(Object o : labelLines) {
+            if (o.toString().length() > maxSpace) {
+                maxSpace = o.toString().length();
+            }
+        }
+        for (int i = 0; i < maxSpace; i++) {
+            space += " ";
+        }
+        s+=space;
+        for(Object o : labelColumns) {
+            s += o.toString() + " | ";
+        }
+        s += "\n";
+        for(Object l : labelLines) {
+            s += l.toString() + " | ";
+            for (Object c : labelColumns) {
+                s += mapSeries.get(c).getData(l).toString() + " | ";
+            }
+            s += "\n";
+        }
+        return s;
+    }
+
+    public String printFirstLines(int n) {
+        int columns[] = new int[labelColumns.length];
+        int lines[] = new int[n];
+        for(int i = 0; i < labelColumns.length; i++) {
+            columns[i] = i;
+        }
+        for(int i = 0; i < n; i++) {
+            lines[i] = i;
+        }
+        Dataframe newDataframe = this.iloc(columns, lines);
+        return newDataframe.toString();
+    }
+
+    public String printLastLines(int n) {
+        int columns[] = new int[labelColumns.length];
+        int lines[] = new int[n];
+        for(int i = 0; i < labelColumns.length; i++) {
+            columns[i] = i;
+        }
+        int j = 0;
+        for(int i = labelLines.length - n; i < labelLines.length; i++) {
+            lines[j] = i;
+            j++;
+        }
+        Dataframe newDataframe = this.iloc(columns, lines);
+        return newDataframe.toString();
+    }
+    
 }
