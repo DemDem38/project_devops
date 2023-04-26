@@ -52,6 +52,10 @@ public class Series {
         }
     }
 
+    public Object getData(Object label) {
+        return mapData.get(label);
+    }
+
 
     // Getters
     public HashMap<Object, Object> getMapData() {

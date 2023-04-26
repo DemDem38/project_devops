@@ -33,7 +33,7 @@ public class Dataframe {
     /* ================= Initialize Dataframe ================= */
     private void initializeDataframe(Object[] indColumns, Object[][] o) {
         // Test if the array have the correct size
-        sizeLabelColumnsEqual(indColumns, o);
+        sizeLabelColumsEqual(indColumns, o);
         numberElementColumn(o);
 
         labelLines = new Object[o[0].length];
@@ -47,7 +47,7 @@ public class Dataframe {
 
     private void initializeDataframe(Object[] indColumn, Object[][] o, Object[] indLines) {
         // Test if the array have the correct size
-        sizeLabelColumnsEqual(indColumn, o);
+        sizeLabelColumsEqual(indColumn, o);
         numberElementColumn(o);
         if (o.length > 0) {
             numberIndexLines(indLines, o[0].length);
@@ -62,8 +62,8 @@ public class Dataframe {
         }
     }
 
-    // Verify if the number of labels and columns is equal
-    private void sizeLabelColumnsEqual(Object[] i, Object[][] o) {
+    // Verify if the number of labels and colums is equal
+    private void sizeLabelColumsEqual(Object[] i, Object[][] o) {
         if (i.length != o.length) {
             throw new IllegalArgumentException("Number of columns is " + o.length + " but number of labels is " + i.length);
         }
@@ -72,13 +72,13 @@ public class Dataframe {
     // Verify if the number of elements in each column is the same
     private void numberElementColumn(Object[][] o) {
         int size = o.length;
-        int sizeColumns;
+        int sizeColums;
         if (size > 0) {
-            sizeColumns = o[0].length;
+            sizeColums = o[0].length;
             for (int i = 1; i < size; i++) {
-                if (sizeColumns != o[i].length) {
+                if (sizeColums != o[i].length) {
                     throw new IllegalArgumentException("Size of column " + i + " is " + o[i].length +
-                                                        " instead of size " + sizeColumns);
+                                                        " instead of size " + sizeColums);
                 }
             }
         }
@@ -222,6 +222,134 @@ public class Dataframe {
         return objTranspose.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
     }
 
+    /*  ================= Selection ================= */
+
+    // Create a sub-dataframe of this dataframe when giving indexs
+    public Dataframe iloc(int[] indCol, int[] indLin) {
+        // Verify index
+        if (indCol == null || indLin == null) {
+            throw new IllegalArgumentException("An array of index is null");
+        }
+        verifyIndex(indCol, indLin);
+
+        // if it's ok, get the label from index
+        // For columns
+        int sizeIndCol = indCol.length;
+        Object[] labCol;
+        labCol = new Object[sizeIndCol];
+        for (int i = 0; i < sizeIndCol; i++) {
+            labCol[i] = labelColumns[indCol[i]];
+        }
+
+
+        // For lines
+        int sizeIndLin = indLin.length;
+        Object[] labLin;
+        labLin = new Object[sizeIndLin];
+        for (int i = 0; i < sizeIndLin; i++) {
+            labLin[i] = labelLines[indLin[i]];
+        }
+        return loc(labCol, labLin);
+    }
+
+    // Create a sub-dataframe of this dataframe when giving labels
+    public Dataframe loc(Object[] labCol, Object[] labLin) {
+        // Verify both arrays
+        if (labCol == null || labLin == null) {
+            throw new IllegalArgumentException("An array of labels is null");
+        }
+        verifyLabels(labCol, labLin);
+
+        Object[] newLabCol = labCol;
+        Object[] newLabLin = labLin;
+        if (newLabCol.length == 0 && newLabLin.length > 0) {
+            newLabCol = labelColumns;
+            System.out.println("OK BIS");
+        }
+        if (newLabLin.length == 0 && newLabCol.length > 0) {
+            newLabLin = labelLines;
+            System.out.println("OK");
+        }
+
+        // Now, we create the array for the new dataframe
+        ArrayList<ArrayList<Object>> newData = new ArrayList<>();
+        ArrayList<Object> newDataCol;
+        Series actual;
+        for (Object lc : newLabCol) {
+            newDataCol = new ArrayList<>();
+            actual = mapSeries.get(lc);
+            for (Object ll : newLabLin) {
+                newDataCol.add(actual.getData(ll));
+            }
+            newData.add(newDataCol);
+        }
+        return new Dataframe(newLabCol, ArrayListToArray(newData), newLabLin);
+    }
+
+    // Verify that all indexes are valide
+    private void verifyIndex(int[] indCol, int[] indLines) {
+        // For columns
+        for (int ic : indCol) {
+            if (ic >= labelColumns.length || ic < 0) {
+                throw new IllegalArgumentException("Index " + ic + " of colums out of bounds length " + labelColumns.length);
+            }
+        }
+        // For lines
+        for (int il : indLines) {
+            if (il >= labelLines.length || il < 0) {
+                throw new IllegalArgumentException("Index " + il + " of lines out of bounds length " + labelLines.length);
+            }
+        }
+    }
+
+    // Check if the labels in the array are valid for columns and lines
+    private void verifyLabels(Object[] labCol, Object[] labLin) {
+        // For columns
+        for (Object o : labCol) {
+            if (mapSeries.get(o) == null) {
+                throw new IllegalArgumentException("Label " + o + " of columns don't exist");
+            }
+        }
+        // For lines
+        boolean isContain;
+        int i = 0;
+        for (Object o : labLin) {
+            isContain = false;
+            while (i < labelLines.length && !isContain) {
+                if (labelLines[i].equals(o)) {
+                    isContain = true;
+                }
+                i++;
+            }
+            if (!isContain) {
+                throw new IllegalArgumentException("Label " + o + " of lines don't exist");
+            }
+        }
+    }
+
+    // Add a complex selection : from a specific value
+    public Dataframe filterData(Object labCol, String comparator, Object value) {
+        if (!checkComparator(comparator)) {
+            throw new IllegalArgumentException("Comparator " + comparator + " is not a comparator");
+        }
+
+        return null;
+    }
+
+    private boolean checkComparator(String comparator) {
+        switch (comparator) {
+            case "==":
+            case "!=":
+            case "<":
+            case ">":
+            case ">=":
+            case "<=":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // Getters
     public HashMap<Object, Series> getMapSeries() {
         return mapSeries;
@@ -235,52 +363,64 @@ public class Dataframe {
         return labelColumns;
     }
 
-    // Affichages
-    // All DataFrame
-    @Override
-    public String toString() {
-        String s = "";
-        for (L name: mapSeries.keySet()) {
-            s += name.toString() + "|";
-        }
-        for (int i = 0; i < index.size(); i++) {
-            s += "\n" + index.get(i) + "|";
-            for (L name: mapSeries.keySet()) {
-                s += mapSeries.get(name).getList().get(i) + "|";
-            }
-        }
-        return s +"\n";
+    public boolean compareDataframe(Dataframe d) {
+        return compareLabelColumns(d) && compareLabelLines(d) && compareData(d);
     }
 
-    // Only First n lines
-    public String printFirstLines(int n) {
-        String s = "";
-        for (L name: mapSeries.keySet()) {
-            s += name.toString() + "|";
+    private boolean compareLabelColumns(Dataframe d) {
+        // Compare columns
+        if (this.labelColumns.length != d.getLabelColumns().length) {
+            return false;
         }
-        for (int i = 0; i < n; i++) {
-            s += "\n" + index.get(i) + "|";
-            for (L name: mapSeries.keySet()) {
-                s += mapSeries.get(name).getList().get(i) + "|";
+        boolean isInCol;
+        for (int i = 0; i < this.labelColumns.length; i++) {
+            isInCol = false;
+            for (int j = 0; j < d.labelColumns.length; j++) {
+                if (this.labelColumns[i] == d.getLabelColumns()[i]) {
+                    isInCol = true;
+                }
+            }
+            if (!isInCol) {
+                return false;
             }
         }
-        return s +"\n";
+        return true;
     }
 
-    // Only Last n lines
-    public String printLastLines(int n) {
-        String s = "";
-        for (L name: mapSeries.keySet()) {
-            s += name.toString() + "|";
+    private boolean compareLabelLines(Dataframe d) {
+        if (this.labelLines.length != d.getLabelLines().length) {
+            return false;
         }
-        for (int i = n-1; i < index.size(); i++) {
-            s += "\n" + index.get(i) + "|";
-            for (L name: mapSeries.keySet()) {
-                s += mapSeries.get(name).getList().get(i) + "|";
+        boolean isInCol;
+        for (Object labelLine : this.labelLines) {
+            isInCol = false;
+            for (int j = 0; j < d.labelLines.length; j++) {
+                if (labelLine == d.getLabelLines()[j]) {
+                    isInCol = true;
+                }
+            }
+            if (!isInCol) {
+                return false;
             }
         }
-        return s +"\n";
+        return true;
     }
 
-    
+    private boolean compareData(Dataframe d) {
+        HashMap<Object, Series> serD = d.getMapSeries();
+
+        for (Object objCol : labelColumns) {
+            for (Object objLin : labelLines) {
+                Object ourData = mapSeries.get(objCol).getData(objLin);
+                Object hisData = serD.get(objCol).getData(objLin);
+                if (hisData == null) {
+                    return false;
+                }
+                if (ourData != hisData) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
