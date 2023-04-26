@@ -444,4 +444,135 @@ public class DataframeTest extends TestCase {
             fail("Selection with index out of bounds give another exception");
         }
     }
+
+
+    // testFindMaxIntegerValueOfColumn() : test if max value of column is returned (for a Integer)
+    // when column selected is Integer
+    public void testFindMaxIntegerValueOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        int maxValue = dataframe.findMaxIntegerValueOfColumn("A");
+        assertEquals(3, maxValue);
+    }
+
+    // testFindMinIntegerValueOfColumn() : test if min value of column is returned (for a Integer)
+    // when column selected is Integer
+    public void testFindMinIntegerValueOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        int minValue = dataframe.findMinIntegerValueOfColumn("A");
+        assertEquals(0, minValue);
+    }
+
+    // testFindMaxMinIntegerValueOfNotIntegerColumn() : test if max or min value of column is -1 when column is not an Integer column
+    public void testFindMaxMinIntegerValueOfNotIntegerColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        int maxValue = dataframe.findMaxIntegerValueOfColumn("B");
+        assertEquals(-1, maxValue);
+        int minValue = dataframe.findMinIntegerValueOfColumn("B");
+        assertEquals(-1, minValue);
+    }
+
+    // testFindMaxFloatValueOfColumn() : test if max value of column is returned (for a Float) 
+    // when column selected is Float
+    public void testFindMaxFloatValueOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0f, 1.0f, 2.0f}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float maxValue = dataframe.findMaxFloatValueOfColumn("C");
+        assertEquals(2.0f, maxValue);
+    }
+
+    // testFindMinIntegerValueOfColumn() : test if min value of column is returned (for a Float)
+    // when column selected is Float
+    public void testFindMinFloatValueOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0f, 1.0f, 2.0f}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float minValue = dataframe.findMinFloatValueOfColumn("C");
+        assertEquals(0.0f, minValue);
+    }
+
+    // testFindMaxMinFloatValueOfNotFloatColumn() : test if max or min value of column is -1 when column is not a Float column
+    public void testFindMaxMinFloatValueOfNotFloatColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float maxValue = dataframe.findMaxFloatValueOfColumn("B");
+        assertEquals(-1.0f, maxValue);
+        float minValue = dataframe.findMinFloatValueOfColumn("B");
+        assertEquals(-1.0f, minValue);
+    }
+
+    // testIntegerMeanOfColumn() : test if min value of column is returned (for a Integer)
+    // when column selected is integer
+    public void testIntegerMeanOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{1, 1, 1, 2},
+                {"a", "b", "c", "d"},
+                {0.0, 1.0, 2.0, 3.0}};
+        String[] lines = new String[]{"a", "b", "c", "d"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float mean = dataframe.findIntegerMeanOfColumn("A");
+        assertEquals(1.25f, mean);
+    }
+
+    // testFloatMeanOfColumn() : test if min value of column is returned (for a Float)
+    // when column selected is float
+    public void testFloatMeanOfColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{1, 1, 1, 2},
+                {"a", "b", "c", "d"},
+                {0.0f, 1.0f, 2.0f, 3.0f}};
+        String[] lines = new String[]{"a", "b", "c", "d"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float mean = dataframe.findFloatMeanOfColumn("C");
+        assertEquals(1.5f, mean);
+    }
+
+    // testFindMeanIntegerValueOfNotFloatColumn() : test if mean value of column is 0.0f when column is not a Integer column
+    public void testFindMeanIntegerValueOfNotIntegerColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0f, 1.0f, 2.0f}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float mean = dataframe.findIntegerMeanOfColumn("B");
+        assertEquals(0f, mean);
+    }
+
+    // testFindMeanFloatValueOfNotFloatColumn() : test if mean value of column is 0.0f when column is not a Float column
+    public void testFindMeanFloatValueOfNotFloatColumn() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0f, 1.0f, 2.0f}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+        float mean = dataframe.findFloatMeanOfColumn("B");
+        assertEquals(0f, mean);
+    }
 }
