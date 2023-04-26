@@ -163,3 +163,4 @@ note: Nous nous sommes rendu compte de l'utilité de la branche dev après avoir
 C'est la raison pour laquelle il y a une pull request de dataframe_creation vers main la première semaine.  
 
 # FeedBack
+Les différents outils utilisé durant le projet sont nécessaire au bon fonctionnement et permet le bon déroulement de ce dernier. Pour travailler dans les meilleur condition.
