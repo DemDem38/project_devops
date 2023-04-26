@@ -37,9 +37,38 @@ labelLines = new String[]{"Personne 1", "Personne 2", "Personne 3"};
 objects = new Object[][]{ {35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'} };
 dataframe = new Dataframe(labelColumns, objects, labelLines);
 ```
-Par fichier csv
+Par fichier csv en spécifiant un séparateur qui sépare les éléments dans le fichier
 ```java
+Dataframe dataframe;
+dataframe = Dataframe.read_csv("chemin_vers_fichier", "sep");
+```
+Par fichier csv où le séparateur est ","
+```java
+Dataframe dataframe;
+dataframe = Dataframe.read_csv("chemin_vers_fichier");
+```
+Pour pouvoir lire le fichier csv, la structure est la suivante :
+  - 1re ligne : nom des colonnes
+  - 2e ligne : 1re ligne des éléments dans les colonnes
+  - 3e ligne : 2e ligne des éléments dans les colonnes
+  - Etc...
 
+
+Exemple : On crée le dataframe suivant
+```java
+Dataframe dataframe;
+String[] labelColumns;
+Object[][] objects;
+labelColumns = new String[]{"Age", "Nationalité", "Sexe"};
+objects = new Object[][]{ {35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'} };
+dataframe = new Dataframe(labelColumns, objects);
+```
+Pour obtenir le même dataframe. La structure du fichier sera donc
+```csv
+Age,Nationalite,Sexe
+35,Français,H
+63,Belge,F
+39,Suisse,H
 ```
 ## Affichage d'un dataframe:  
 Afficher l'intégralité d'un dataframe
@@ -55,8 +84,40 @@ Afficher uniquement les n dernières lignes
 ```java
 System.out.println(dataframe.printLastLines(n));
 ```
-## Sélection dans un dataframe:  
-TODO
+## Sélection dans un dataframe:
+### Par sélection d'index ou de labels : iloc() et loc()
+Sélectionner un sous-ensemble de lignes et/ou de colonnes à partir d'index
+```java
+// Sélectionne les colonnes d'indices 0 et 1 et la ligne d'indice 2
+Dataframe dfi = dataframe.iloc([0, 1], [2]);
+```
+Sélectionner un sous-ensemble de lignes et/ou de colonnes à partir de labels
+```java
+// Sélectionne les colonnes de label "Age" et "Nationalité" et la ligne de label "Personne 3"
+Dataframe dfl = dataframe.loc(["Age", "Nationalité"], ["Personne 3"]);
+```
+
+Pour sélectionner un sous-ensemble de lignes, le tableau d'index/labels des colonnes doit être vide et préciser les index/labels des lignes
+```java
+// Sélectionne la ligne d'indice 2
+Dataframe dfi = dataframe.iloc([], [2]);
+// Sélectionne la ligne de label "Personne 3"
+Dataframe dfl = dataframe.loc([], ["Personne 3"]);
+```
+Pour sélectionner un sous-ensemble de colonnes, faire l'opération inverse
+```java
+// Sélectionne les colonnes d'indices 0 et 1
+Dataframe dfi = dataframe.iloc([0, 1], []);
+// Sélectionne les colonnes de labels "Age" et "Nationalité"
+Dataframe dfl = dataframe.loc(["Age", "Nationalité"], []);
+```
+### Par filtrage de données : filterData()
+Spécifier un label de colonnes, un comparateur parmi {"==", "!=", "<", ">", "<=", ">="} et une valeur de même type que les données que la colonne
+```java
+// Sélectionne les lignes où l'âge est inférieur ou égale à 55
+Dataframe df = dataframe.filterData("Age", "<=", 55);
+```
+
 ## Statistiques dans un dataframe: 
 Ces trois méthodes renvoient le bon résultat uniquement si le label de la colonne spécifiée contient des entiers.  
 Récupérer l'entier maximal à partir du label de la colonne  
