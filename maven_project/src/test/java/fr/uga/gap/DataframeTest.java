@@ -140,10 +140,11 @@ public class DataframeTest extends TestCase {
     // testReadCSVcorrect() : file found and dataframe create
     public void testReadCSVcorrect() {
         Dataframe d = Dataframe.read_csv("src/test/resources/correctFile.csv");
-        String[] labelCol = new String[]{"String","Float","Character","Integer"};
+        String[] labelCol = new String[]{"String","Float","Double","Character","Integer"};
         Object[][] data = new Object[][]{
                 {"booker12", "grey07", "johnson81", "jenkins46", "smith79"},
                 {9012.128f, 2070.2994f, 4081.7f, 9346.614f, 5079.01f},
+                {0.0, 1.1, 2.2, 3.3, 4.4},
                 {'R', 'L', 'C', 'M', 'J'},
                 {0, 1, 2, 3, 4}
         };
@@ -365,27 +366,6 @@ public class DataframeTest extends TestCase {
         assertTrue(select.compareDataframe(corretDataframe));
     }
 
-    // testSelectLabelsValidColumns() : Check if a selection of a dataframe give
-    // the good "sub" dataframe (1 column) with labels
-    public void testSelectLabelsValidColumns() {
-        String[] name = new String[]{"A", "B", "C"};
-        Object[][] object = new Object[][]{{0, 1, 3},
-                {"a", "b", "c"},
-                {0.0, 1.0, 2.0}};
-        String[] lines = new String[]{"a", "b", "c"};
-        Dataframe dataframe = new Dataframe(name, object, lines);
-
-        // Correct dataframe
-        String[] correctName = new String[]{"A"};
-        Object[][] correctObject = new Object[][]{{0, 1, 3}};
-        String[] correctLines = new String[]{"a", "b", "c"};
-        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
-
-        // Select a sub par of dataframe
-        Dataframe select = dataframe.loc(new Object[]{"A"}, new Object[]{});
-        assertTrue(select.compareDataframe(corretDataframe));
-    }
-
     // testSelectLabelsValidLines() : Check if a selection of a dataframe give
     // the good "sub" dataframe (1 line) with labels
     public void testSelectLabelsValidLines() {
@@ -406,6 +386,28 @@ public class DataframeTest extends TestCase {
 
         // Select a sub par of dataframe
         Dataframe select = dataframe.loc(new Object[]{}, new Object[]{"a"});
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+
+    // testSelectLabelsValidColumns() : Check if a selection of a dataframe give
+    // the good "sub" dataframe (1 column) with labels
+    public void testSelectLabelsValidColumns() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A"};
+        Object[][] correctObject = new Object[][]{{0, 1, 3}};
+        String[] correctLines = new String[]{"a", "b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.loc(new Object[]{"A"}, new Object[]{});
         assertTrue(select.compareDataframe(corretDataframe));
     }
 
@@ -466,5 +468,307 @@ public class DataframeTest extends TestCase {
         } catch (Exception e) {
             fail("Selection with index out of bounds give another exception");
         }
+    }
+
+    // testFilterValidInteger() : Test the complex selection when dataframe["A"] == 0
+    public void testFilterValidInteger() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{0},
+                {"a"},
+                {0.0},
+                {0.0f},
+                {"Hello"}};
+        String[] correctLines = new String[]{"a"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("A", "==", 0);
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidChar() : Test the complex selection when dataframe["B"] != 'a'
+    public void testFilterValidChar() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {'a', 'b', 'c'},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{1, 3},
+                {'b', 'c'},
+                {1.0, 2.0},
+                {1.1f, 2.2f},
+                {"Bonjour", "Hola"}};
+        String[] correctLines = new String[]{"b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("B", "!=", 'a');
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidDouble() : Test the complex selection when dataframe["C"] < 1.0
+    public void testFilterValidDouble() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {'a', 'b', 'c'},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{0},
+                {'a'},
+                {0.0},
+                {0.0f},
+                {"Hello"}};
+        String[] correctLines = new String[]{"a"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("C", "<", 1.0);
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidFloat() : Test the complex selection when dataframe["D"] > 0.0
+    public void testFilterValidFloat() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {'a', 'b', 'c'},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{1, 3},
+                {'b', 'c'},
+                {1.0, 2.0},
+                {1.1f, 2.2f},
+                {"Bonjour", "Hola"}};
+        String[] correctLines = new String[]{"b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("C", ">", 0.0);
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidString() : Test the complex selection when dataframe["E"] == "Hello"
+    public void testFilterValidString() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{0},
+                {"a"},
+                {0.0},
+                {0.0f},
+                {"Hello"}};
+        String[] correctLines = new String[]{"a"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("E", "==", "Hello");
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidInfEq() : Test the complex selection when dataframe["A"] <= 1
+    public void testFilterValidInfEq() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{0, 1},
+                {"a", "b"},
+                {0.0, 1.0},
+                {0.0f, 1.1f},
+                {"Hello", "Bonjour"}};
+        String[] correctLines = new String[]{"a", "b"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("A", "<=", 1);
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterValidSupEq() : Test the complex selection when dataframe["A"] >= 1
+    public void testFilterValidSupEq() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{1, 3},
+                {"b", "c"},
+                {1.0, 2.0},
+                {1.1f, 2.2f},
+                {"Bonjour", "Hola"}};
+        String[] correctLines = new String[]{"b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("A", ">=", 1);
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterInvalidLabel() : Test the complex selection when the label given is not in the dataframe
+    public void testFilterInvalidLabel() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Select a sub par of dataframe
+        try {
+            Dataframe select = dataframe.filterData("Q", ">=", 1);
+            fail("Filtering data with invalid label don't catch the exception");
+        } catch (IllegalArgumentException e) {
+            // OK
+        } catch (Exception e) {
+            fail("Filtering data with invalid label give another exception");
+        }
+    }
+
+    // testFilterInvalidComparator() : Test the complex selection when the comparator are not one
+    public void testFilterInvalidComparator() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Select a sub par of dataframe
+        try {
+            Dataframe select = dataframe.filterData("A", "zrc", 1);
+            fail("Filtering data with invalid comparator don't catch the exception");
+        } catch (IllegalArgumentException e) {
+            // OK
+        } catch (Exception e) {
+            fail("Filtering data with invalid comparator give another exception");
+        }
+    }
+
+    // testFilterInvalidTypeValue() : Test the complex selection when the value has not the same type as the column
+    public void testFilterInvalidTypeValue() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Select a sub par of dataframe
+        try {
+            Dataframe select = dataframe.filterData("A", "==", "false");
+            fail("Filtering data with invalid type value don't catch the exception");
+        } catch (IllegalArgumentException e) {
+            // OK
+        } catch (Exception e) {
+            fail("Filtering data with invalid type value give another exception");
+        }
+    }
+
+    // testFilterCompareFloatDouble() : Test the complex selection when the value is a float
+    // and the type of the column has type "double"
+    public void testFilterCompareFloatDouble() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{1, 3},
+                {"b", "c"},
+                {1.0, 2.0},
+                {1.1f, 2.2f},
+                {"Bonjour", "Hola"}};
+        String[] correctLines = new String[]{"b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("D", ">=", 1.0); // compare float and double
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
+    // testFilterCompareDoubleFloat() : Test the complex selection when the value is a double
+    // and the type of the column has type "float"
+    public void testFilterCompareDoubleFloat() {
+        String[] name = new String[]{"A", "B", "C", "D", "E"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0},
+                {0.0f, 1.1f, 2.2f},
+                {"Hello", "Bonjour", "Hola"}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C", "D", "E"};;
+        Object[][] correctObject = new Object[][]{{1, 3},
+                {"b", "c"},
+                {1.0, 2.0},
+                {1.1f, 2.2f},
+                {"Bonjour", "Hola"}};
+        String[] correctLines = new String[]{"b", "c"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.filterData("C", ">=", 1.0f); // compare float and double
+        assertTrue(select.compareDataframe(corretDataframe));
     }
 }
