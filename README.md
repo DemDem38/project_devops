@@ -23,7 +23,7 @@ Dataframe dataframe;
 String[] labelColumns;
 Object[][] objects;
 labelColumns = new String[]{"Age", "Nationalité", "Sexe"};
-objects = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+objects = new Object[][]{ {35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'} };
 dataframe = new Dataframe(labelColumns, objects);
 ```
 Par constructeur en spécifiant des index pour les lignes (ici des strings: Personne 1, Personne2, Personne 3)
@@ -34,7 +34,7 @@ String[] labelLines;
 Object[][] objects;
 labelColumns = new String[]{"Age", "Nationalité", "Sexe"};
 labelLines = new String[]{"Personne 1", "Personne 2", "Personne 3"};
-objects = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+objects = new Object[][]{ {35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'} };
 dataframe = new Dataframe(labelColumns, objects, labelLines);
 ```
 Par fichier csv
