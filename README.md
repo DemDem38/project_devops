@@ -146,6 +146,7 @@ findFloatMeanOfColumn(Object labelColumn);
 # Choix des outils
 Nous utilisons l'environnement de développement Visual Studio Code.  
 Le projet est un projet Maven.  
+GitHub Actions permet la création du Pipeline d'automatisation des tests. 
 La couverture de code se fait à l'aide de Jacoco.  
 
 # Workflow git
