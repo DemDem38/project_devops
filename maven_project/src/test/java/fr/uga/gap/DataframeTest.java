@@ -10,11 +10,16 @@ public class DataframeTest extends TestCase {
      *
      * @param testName name of the test case
      */
+    Dataframe dataframeReal;
+    String[] name;
+    Object[][] object;
 
     public DataframeTest( String testName )
     {
         super( testName );
-
+        name = new String[]{"Age", "Nationalité", "Sexe"};
+        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframeReal = new Dataframe(name, object);
     }
 
     /**
@@ -447,13 +452,7 @@ public class DataframeTest extends TestCase {
 
     // testAffichageComplet() : vérifie l'affichage complet d'un dataframe
     public void testAffichageComplet() {
-        Dataframe dataframe;
-        String[] name;
-        Object[][] object;
-        name = new String[]{"Age", "Nationalité", "Sexe"};
-        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
-        dataframe = new Dataframe(name, object);
-        String s = dataframe.toString();
+        String s = dataframeReal.toString();
         String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n2 | 39 | Suisse | H | \n";
         int equal = s.compareTo(expected);
         assertEquals(0, equal);
@@ -461,13 +460,7 @@ public class DataframeTest extends TestCase {
 
     // testAffichagePremieresLignes() : vérifie l'affichage des premières lignes d'un dataframe
     public void testAffichagePremieresLignes() {
-        Dataframe dataframe;
-        String[] name;
-        Object[][] object;
-        name = new String[]{"Age", "Nationalité", "Sexe"};
-        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
-        dataframe = new Dataframe(name, object);
-        String s = dataframe.printFirstLines(2);
+        String s = dataframeReal.printFirstLines(2);
         String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n";
         int equal = s.compareTo(expected);
         assertEquals(0, equal);
@@ -475,13 +468,7 @@ public class DataframeTest extends TestCase {
 
     // testAffichageDernieresLignes() : vérifie l'affichage des dernières lignes d'un dataframe
     public void testAffichageDernieresLignes() {
-        Dataframe dataframe;
-        String[] name;
-        Object[][] object;
-        name = new String[]{"Age", "Nationalité", "Sexe"};
-        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
-        dataframe = new Dataframe(name, object);
-        String s = dataframe.printLastLines(1);
+        String s = dataframeReal.printLastLines(1);
         String expected = "    Age | Nationalité | Sexe | \n2 | 39 | Suisse | H | \n";
         int equal = s.compareTo(expected);
         assertEquals(0, equal);
