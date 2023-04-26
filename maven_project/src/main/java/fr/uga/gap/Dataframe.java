@@ -146,6 +146,8 @@ public class Dataframe {
                 splitLine = line.split(sep);
                 value.add(splitLine);
             }
+
+            br.close();
         } catch (FileNotFoundException f) {
             throw new RuntimeException("File " + filename + " not found");
         } catch (IOException i) {
@@ -376,7 +378,7 @@ public class Dataframe {
         for (int i = 0; i < this.labelColumns.length; i++) {
             isInCol = false;
             for (int j = 0; j < d.labelColumns.length; j++) {
-                if (this.labelColumns[i] == d.getLabelColumns()[i]) {
+                if (this.labelColumns[i].toString().equals(d.getLabelColumns()[i].toString())) {
                     isInCol = true;
                 }
             }
@@ -395,7 +397,7 @@ public class Dataframe {
         for (Object labelLine : this.labelLines) {
             isInCol = false;
             for (int j = 0; j < d.labelLines.length; j++) {
-                if (labelLine == d.getLabelLines()[j]) {
+                if (labelLine.toString().equals(d.getLabelLines()[j].toString())) {
                     isInCol = true;
                 }
             }
@@ -416,7 +418,7 @@ public class Dataframe {
                 if (hisData == null) {
                     return false;
                 }
-                if (ourData != hisData) {
+                if (!ourData.toString().equals(hisData.toString())) {
                     return false;
                 }
             }

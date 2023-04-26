@@ -386,6 +386,29 @@ public class DataframeTest extends TestCase {
         assertTrue(select.compareDataframe(corretDataframe));
     }
 
+    // testSelectLabelsValidLines() : Check if a selection of a dataframe give
+    // the good "sub" dataframe (1 line) with labels
+    public void testSelectLabelsValidLines() {
+        String[] name = new String[]{"A", "B", "C"};
+        Object[][] object = new Object[][]{{0, 1, 3},
+                {"a", "b", "c"},
+                {0.0, 1.0, 2.0}};
+        String[] lines = new String[]{"a", "b", "c"};
+        Dataframe dataframe = new Dataframe(name, object, lines);
+
+        // Correct dataframe
+        String[] correctName = new String[]{"A", "B", "C"};
+        Object[][] correctObject = new Object[][]{{0},
+                {"a"},
+                {0.0}};
+        String[] correctLines = new String[]{"a"};
+        Dataframe corretDataframe = new Dataframe(correctName, correctObject, correctLines);
+
+        // Select a sub par of dataframe
+        Dataframe select = dataframe.loc(new Object[]{}, new Object[]{"a"});
+        assertTrue(select.compareDataframe(corretDataframe));
+    }
+
     // testSelectLabelsNull() : Check if a selection of a dataframe with index null get an exception
     public void testSelectLabelsNull() {
         String[] name = new String[]{"A", "B", "C"};
