@@ -158,7 +158,7 @@ Si les tests n'échouent pas, nous effectuons une pull request de la branche fea
 Une autre personne que le codeur passe en revue le code écrit, et fais des commentaires si besoin.  
 La pull request est acceptée lorsque les tests sont validés et que l'ensemble des fonctionnalités désirés sont testés.  
 
-Lorsque le contenu de la branche dev est une version qui est stable (c'est à dire, où tout les tests passent et ou le code coverage dépasse un certain pourcentage), nous déterminons qu'il est judicieux de merge la branche dev dans main.
+Lorsque le contenu de la branche dev est une version qui est stable (c'est à dire, où tout les tests passent et ou le code coverage dépasse 90%), nous déterminons qu'il est judicieux de merge la branche dev dans main.
 
 note: Nous nous sommes rendu compte de l'utilité de la branche dev après avoir créer et push une première version de la création des dataframes.
 C'est la raison pour laquelle il y a une pull request de dataframe_creation vers main la première semaine.  
