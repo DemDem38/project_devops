@@ -444,4 +444,46 @@ public class DataframeTest extends TestCase {
             fail("Selection with index out of bounds give another exception");
         }
     }
+
+    // testAffichageComplet() : vérifie l'affichage complet d'un dataframe
+    public void testAffichageComplet() {
+        Dataframe dataframe;
+        String[] name;
+        Object[][] object;
+        name = new String[]{"Age", "Nationalité", "Sexe"};
+        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframe = new Dataframe(name, object);
+        String s = dataframe.toString();
+        String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n2 | 39 | Suisse | H | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
+    }
+
+    // testAffichagePremieresLignes() : vérifie l'affichage des premières lignes d'un dataframe
+    public void testAffichagePremieresLignes() {
+        Dataframe dataframe;
+        String[] name;
+        Object[][] object;
+        name = new String[]{"Age", "Nationalité", "Sexe"};
+        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframe = new Dataframe(name, object);
+        String s = dataframe.printFirstLines(2);
+        String expected = "    Age | Nationalité | Sexe | \n0 | 35 | Français | H | \n1 | 63 | Belge | F | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
+    }
+
+    // testAffichageDernieresLignes() : vérifie l'affichage des dernières lignes d'un dataframe
+    public void testAffichageDernieresLignes() {
+        Dataframe dataframe;
+        String[] name;
+        Object[][] object;
+        name = new String[]{"Age", "Nationalité", "Sexe"};
+        object = new Object[][]{{35, 63, 39},{"Français", "Belge", "Suisse"},{'H', 'F', 'H'}};
+        dataframe = new Dataframe(name, object);
+        String s = dataframe.printLastLines(1);
+        String expected = "    Age | Nationalité | Sexe | \n2 | 39 | Suisse | H | \n";
+        int equal = s.compareTo(expected);
+        assertEquals(0, equal);
+    }
 }
