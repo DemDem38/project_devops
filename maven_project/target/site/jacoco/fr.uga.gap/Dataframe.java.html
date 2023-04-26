@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Dataframe.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">maven_project</a> &gt; <a href="index.source.html" class="el_package">fr.uga.gap</a> &gt; <span class="el_source">Dataframe.java</span></div><h1>Dataframe.java</h1><pre class="source lang-java linenums">package fr.uga.gap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Dataframe&lt;L&gt; {
+    
+    private HashMap&lt;L, Series&lt;Object&gt;&gt; mapSeries;
+    private ArrayList&lt;Integer&gt; index;
+
+<span class="fc" id="L11">    public Dataframe(L[] ind, Object[][] o) {</span>
+<span class="fc" id="L12">        mapSeries = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L13">        index = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        for (int i = 0; i &lt; o.length; i++) {</span>
+<span class="fc" id="L16">            Series&lt;Object&gt; s = new Series&lt;&gt;(o[i]);</span>
+<span class="fc" id="L17">            mapSeries.put(ind[i], s);</span>
+<span class="fc" id="L18">            index.add(i);</span>
+        }
+
+<span class="fc" id="L21">    }</span>
+
+    // Getters and Setters
+    public HashMap&lt;L, Series&lt;Object&gt;&gt; getMapSeries() {
+<span class="fc" id="L25">        return mapSeries;</span>
+    }
+
+    public void setMapSeries(HashMap&lt;L, Series&lt;Object&gt;&gt; mapSeries) {
+<span class="nc" id="L29">        this.mapSeries = mapSeries;</span>
+<span class="nc" id="L30">    }</span>
+
+    public ArrayList&lt;Integer&gt; getIndex() {
+<span class="nc" id="L33">        return index;</span>
+    }
+
+    public void setIndex(ArrayList&lt;Integer&gt; index) {
+<span class="nc" id="L37">        this.index = index;</span>
+<span class="nc" id="L38">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
